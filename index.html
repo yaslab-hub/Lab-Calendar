@@ -17,7 +17,7 @@
         }
 
         .header-container {
-            padding: 20px;
+            padding: 30px;
             width: 100%;
             max-width: 1000px; /* 最大宽度 */
             background: none;
@@ -232,15 +232,50 @@
             text-align: center;
             font-size: 10px;
             color: #666;
-            padding: 100px;
+            padding: 20px;
             background-color: #f4f4f4;
             position: relative; /* 从 absolute 更改为 relative */
             margin-top: 1px; /* 添加与日历的距离 */
             width: 100%;
             box-sizing: border-box;
         }
-    </style>
 
+        /* 值日生小框样式 */
+        .duty-roster-container {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 20px;
+            padding: 0px;
+            text-align: center; /* 文字居中 */
+        }
+
+        .duty-roster-title {
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 0px;
+            color: #000;
+        }
+
+        .duty-roster {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            background-color: #e0e0e0;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 0px;
+            margin: 5px 0;
+        }
+
+        .duty-roster p {
+            margin: 0;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <div class="header-container">
@@ -262,23 +297,26 @@
         <div class="header">Thu</div>
         <div class="header">Fri</div>
         <div class="header">Sat</div>
-        <!-- 这些是日历格子 -->
-        <!-- 在 JavaScript 中动态生成 -->
+        <!-- 这里填充日期格子 -->
     </div>
 
+    <div class="duty-roster-container">
+        <div class="duty-roster-title">- Lab Duty -</div>
+    </div>
+
+    <div id="duty-roster-container" class="duty-roster-container">
+        <!-- 值日生信息会被 JavaScript 动态添加到这里 -->
+    </div>
     <div id="modal" class="modal">
         <div class="modal-content">
-            <span id="modal-close" class="modal-close">&times;</span>
-            <div id="modal-body">
-                <!-- 详细信息将在 JavaScript 中动态插入 -->
-            </div>
+            <span class="modal-close" id="modal-close">&times;</span>
+            <div id="modal-body"></div>
         </div>
     </div>
-
     <div class="footer">
-        @ Designed by Kyle Cheng
+        Yas Lab | All rights reserved
     </div>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const calendar = document.getElementById('calendar');
@@ -289,13 +327,14 @@
             const modal = document.getElementById('modal');
             const modalBody = document.getElementById('modal-body');
             const modalClose = document.getElementById('modal-close');
+            const dutyRosterContainer = document.getElementById('duty-roster-container');
             
-            let currentYear = new Date().getFullYear(); // 获取当前年份
-            let currentMonth = new Date().getMonth(); // 获取当前月份（0-based index）
+            let currentYear = new Date().getFullYear();
+            let currentMonth = new Date().getMonth();
 
-            const events = {
+            const events = { /*在這裡添加行程*/
                 '2024-09-12': {
-                    summary: '1 Event',
+                    summary: '1 Event', /*填寫當天有幾個event*/
                     details: [
                         '<strong><span style="color: blue;">2024-09-12 12:00</span></strong>',
                         '<strong>Topic: New Semester meeting</strong>',
@@ -316,26 +355,25 @@
                 }
             };
 
+            const dutyRoster = { /*在這裡填寫值日生*/
+                '9/2/-9/13': 'John Doe', /*更改日期與人名*/
+                '9/16-9/20': 'Jane Smith',
+            };
+
             function renderCalendar(year, month) {
-                // 定义月份英文名称
                 const monthNames = [
                     'January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'
                 ];
 
-                // 更新年份和月份标题
                 yearHeader.textContent = year;
                 monthHeaderText.textContent = monthNames[month];
 
-                // 获取当月的天数
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
-                // 获取当月1号是星期几
                 const firstDay = new Date(year, month, 1).getDay();
 
-                // 清空现有的日历内容
                 calendar.innerHTML = '';
                 
-                // 添加星期标题
                 const headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 headers.forEach(day => {
                     const headerCell = document.createElement('div');
@@ -344,43 +382,48 @@
                     calendar.appendChild(headerCell);
                 });
 
-                // 填充空白
                 for (let i = 0; i < firstDay; i++) {
                     const cell = document.createElement('div');
-                    cell.className = 'calendar-item'; /* 更新类名 */
+                    cell.className = 'calendar-item';
                     calendar.appendChild(cell);
                 }
 
-                // 填充日期
                 for (let i = 1; i <= daysInMonth; i++) {
                     const cell = document.createElement('div');
-                    cell.className = 'calendar-item'; /* 更新类名 */
+                    cell.className = 'calendar-item';
                     
                     const dayNumber = document.createElement('div');
                     dayNumber.className = 'day-number';
                     dayNumber.textContent = i;
 
                     const currentDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                    if (events[currentDate]) { // 只显示指定日期的事件
+                    if (events[currentDate]) {
                         cell.classList.add('event');
                         cell.innerHTML += `<span class="event-text">${events[currentDate].summary}</span>`;
-                        cell.dataset.details = events[currentDate].details; // 添加数据属性以存储详细信息
+                        cell.dataset.details = events[currentDate].details;
                     }
 
                     if (i === new Date().getDate() && year === new Date().getFullYear() && month === new Date().getMonth()) {
-                        cell.classList.add('today'); // 添加边框标记
+                        cell.classList.add('today');
                     }
 
                     cell.appendChild(dayNumber);
 
-                    // 判断是否为周末
                     const dayOfWeek = (firstDay + i - 1) % 7;
-                    if (dayOfWeek === 0 || dayOfWeek === 6) { // 周日（0）或周六（6）
+                    if (dayOfWeek === 0 || dayOfWeek === 6) {
                         cell.classList.add('weekend');
                     }
                     
                     calendar.appendChild(cell);
                 }
+
+                dutyRosterContainer.innerHTML = '';
+                Object.keys(dutyRoster).forEach(day => {
+                    const rosterItem = document.createElement('div');
+                    rosterItem.className = 'duty-roster';
+                    rosterItem.innerHTML = `<p>${day}: ${dutyRoster[day]}</p>`;
+                    dutyRosterContainer.appendChild(rosterItem);
+                });
             }
 
             function updateCalendar() {
@@ -415,19 +458,16 @@
                 updateCalendar();
             });
 
-            // 关闭模态框
             modalClose.addEventListener('click', function() {
                 modal.style.display = 'none';
             });
 
-            // 点击模态框外部区域也关闭模态框
             window.addEventListener('click', function(event) {
                 if (event.target === modal) {
                     modal.style.display = 'none';
                 }
             });
 
-            // 初始化时显示当月
             updateCalendar();
         });
     </script>
