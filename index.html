@@ -16,34 +16,37 @@
             align-items: center;
         }
         .header-container {
-            padding: 20px;
-            text-align: center; /* 置中显示 */
+            padding: 10px; /* 减少填充 */
+            text-align: center;
             width: 100%;
-            max-width: 1000px; /* 最大宽度设置为1000px */
+            max-width: 1000px;
             box-sizing: border-box;
             position: relative;
-            background: linear-gradient(to right, #ccc, #fff); /* 渐变背景色 */
+            background: linear-gradient(to right, #ccc, #fff);
         }
         h1 {
             color: #333;
             margin: 0;
-            font-size: 48px; /* 标题字体大小是年月的两倍 */
-            font-weight: bold; /* 粗体 */
-            text-transform: capitalize; /* 首字母大写 */
+            font-size: 36px; /* 默认字体大小 */
+            font-weight: bold;
+            text-transform: capitalize;
+            white-space: nowrap; /* 防止标题换行 */
+            overflow: hidden;
+            text-overflow: ellipsis; /* 如果标题太长，则显示省略号 */
         }
         .month-header {
             font-size: 24px;
             font-weight: bold;
             margin: 20px 0;
-            text-align: center; /* 置中显示 */
+            text-align: center;
         }
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 0.5px;
-            width: 100%; /* 使用百分比宽度 */
-            max-width: 1000px; /* 最大宽度设置为1000px */
-            margin: 0 auto; /* 自动左右居中 */
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
             border: 10px solid #ccc;
             background: white;
             box-sizing: border-box;
@@ -53,7 +56,7 @@
             border: 2px solid #ccc;
             padding: 10px;
             text-align: center;
-            min-height: 100px; /* 使用最小高度而不是固定高度 */
+            min-height: 100px;
             box-sizing: border-box;
             overflow: hidden;
         }
@@ -122,6 +125,12 @@
         }
         /* 響應式设计 */
         @media (max-width: 600px) {
+            h1 {
+                font-size: 24px; /* 在小屏幕上减少字体大小 */
+            }
+            .header-container {
+                padding: 10px 5px; /* 减少标题容器的填充 */
+            }
             .calendar {
                 grid-template-columns: repeat(7, 1fr);
             }
